@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        table {
+            width: 700px;
+            margin: auto;
+            text-align: center;
+
+        }
+
+        tr,
+        th {
+            height: 50px;
+        }
+
+
+        td {
+            height: 50px;
+        }
+
+        h3 {
+            width: 700px;
+            margin: auto;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <h3>真划算</h3>
+    <table border="1" style=border-collapse:collapse>
+        <thead>
+            <tr>
+                <th>Index</th>
+                <th>商品</th>
+                <th>单价</th>
+                <th>库存</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody id="goods-tbody"></tbody>
+    </table>
+    <h3>购物车</h3>
+    <table border="1" style=border-collapse:collapse>
+        <thead>
+            <tr>
+                <th>Index</th>
+                <th>商品</th>
+                <th>单价</th>
+                <th>数量</th>
+                <th>金额</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody id="shop-tbody"></tbody>
+    </table>
+    <h3>总价：<b>0</b>￥</h3>
+</body>
+<script>
+    let goodsList = [{
+        id: 100,
+        goodsname: '苹果',
+        price: 5,
+        stock: 50,
+    }, {
+        id: 101,
+        goodsname: '香蕉',
+        price: '6￥',
+        stock: 40,
+    }, {
+        id: 102,
+        goodsname: '哈密瓜',
+        price: '6￥',
+        stock: 35,
+    }]
+
+    let shopCarList = [{
+        id: 101,
+        goodsname: '香蕉',
+        price: 6,
+        num: 5,
+    }, {
+        id: 102,
+        goodsname: '哈密瓜',
+        price: 6,
+        num: 2,
+    }]
+
+    window.onload = init;
+    let GoodTbodyEle = document.querySelector('#goods-tbody');
+    let ShopCarTbodyEle = document.querySelector('#shop-tbody');
+    let BEle = document.querySelector('b')
+    // 页面加载后显示
+    function init() {
+        // 渲染商品和购物车
+        renderGoodsTable()
+        renderShopCarTable()
+        totalPrice()
+        GoodTbodyEle.addEventListener('click', goodTbodyFun)
+        ShopCarTbodyEle.addEventListener('click', shopCarTbodyFun)
+    }
+    // 商品列表
+    function renderGoodsTable() {
+        let html = ``
+        goodsList.forEach((item, index) => {
+            html += `
+            <tr>
+                <td>${index}</td>
+                <td>${item.goodsname}</td>
+                <td>${item.price}</td>
+                <td>${item.stock}</td>
+                <td><button data-index="${index}">加入购物车</button></td>
+            </tr>`
+        })
+        GoodTbodyEle.innerHTML = html
+    }
+    // 购物车
+    function renderShopCarTable() {
+        let html = ``
+        shopCarList.forEach((item, index) => {
+            html += `
+            <tr>
+                <td>${index}</td>
+                <td>${item.goodsname}</td>
+                <td>${item.price}￥</td>
+                <td><button data-index="${index}">+</button>
+                    ${item.num}
+                    <button data-index="${index}">-</button>
+                </td>
+                <td>${item.price * item.num}</td>
+                <td><button data-index="${index}">删除</button></td>
+            </tr>`
+        })
+        ShopCarTbodyEle.innerHTML = html
+        totalPrice()
+    }
+    // 添加到购物车表单身体事件
+    function goodTbodyFun() {
+        if (event.target.tagName == 'BUTTON' &&
+            event.target.innerHTML == '加入购物车') {
+            addShopCar(event.target.dataset.index)
+
+        }
+    }
+    // 加入购物车
+    function addShopCar(index) {
+        // 判断是否还有库存
+        // console.log(goodsList[index]);
+        if (goodsList[index].stock < 1) {
+            alert('库存不足')
+            return
+        }
+        // 库存--
+        goodsList[index].stock--
+        //1. 判断购物车中目标是否改变
+        // 通过数组方法查找下标，确定是否有这个商品，有显示id,没有-1
+        let shopCarindex = shopCarList.findIndex((item) => {
+            return item.id == goodsList[index].id
+        })
+        // 如果 == -1，代表没有
+        if (shopCarindex == -1) {
+            let data = {
+                id: goodsList[index].id,
+                goodsname: goodsList[index].goodsname,
+                price: goodsList[index].price,
+                num: 1,
+            }
+            shopCarList.push(data)
+        } else {
+            // 查到了，数量更改
+            shopCarList[shopCarindex].num++
+            renderGoodsTable()
+            renderShopCarTable()
+        }
+    }
+    // 购物车身体事件
+    function shopCarTbodyFun() {
+        if (event.target.tagName == 'BUTTON' && event.target.innerHTML == '+') {
+            let index = event.target.dataset.index
+            let id = shopCarList[index].id;
+            let goodsIndex = goodsList.findIndex((item) => {
+                return item.id == id
+            })
+            if (goodsIndex == -1) {
+                alert('商品已下架')
+                return
+            } else {
+                if (goodsList[goodsIndex].stock < 1) {
+                    alert('库存不足')
+                    return
+                } else {
+                    goodsList[goodsIndex].stock--
+                    shopCarList[index].num++
+                    renderGoodsTable()
+                    renderShopCarTable()
+                }
+            }
+
+        }
+        if (event.target.tagName == 'BUTTON' && event.target.innerHTML == '-') {
+            let index = event.target.dataset.index
+            if (shopCarList[index].num < 2) {
+                alert('至少买一个')
+                return
+            }
+            //可以将 
+            shopCarList[index].num--
+            // 退库存 先找到商品列表的具体下标位置
+            let id = shopCarList[index].id
+            let goodsIndex = goodsList.findIndex((item) => {
+                return item.id == id
+            })
+            goodsList[goodsIndex].stock++
+            renderGoodsTable()
+            renderShopCarTable()
+        }
+        if (event.target.tagName == 'BUTTON' && event.target.innerHTML == '删除') {
+            // deleteFun(event.targe.dataset.index)
+            let index = event.target.dataset.index
+            let num = shopCarList[index].num
+            // 还库存
+            let id = shopCarList[index].id
+            let goodsIndex = goodsList.findIndex((item) => {
+                return item.id == id
+            })
+            // 把库存还给商品列表
+            goodsList[goodsIndex].stock += num
+            // 删除购物车列表商品
+            shopCarList.splice(index, 1)
+            renderGoodsTable()
+            renderShopCarTable()
+        }
+    }
+    // 计算总价
+    function totalPrice() {
+        let result = shopCarList.reduce((sum, item) => {
+            return sum + item.price * item.num
+        }, 0)
+        BEle.innerHTML = result
+    }
+    // 购物车数量和-1
+    function decreaseFun(index) {
+        //判断目前数量
+        if (shopCarList[index].num < 2) {
+            alert('至少买一个')
+            return
+        }
+        //可以将 
+        shopCarList[index].num--
+        // 退库存 先找到商品列表的具体下标位置
+        let id = shopCarList[index].id
+        let goodsIndex = goodsList.findIndex((item) => {
+            return item.id == id
+        })
+        goodsList[goodsIndex].stock++
+        renderGoodsTable()
+        renderShopCarTable()
+    }
+</script>
+
+</html>

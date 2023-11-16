@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="./jquery-3.7.1.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-image: url("https://ts1.cn.mm.bing.net/th/id/R-C.1da987e08a9ad12e85c2f9f74af6896e?rik=X7o466Nx4NS%2fbA&riu=http%3a%2f%2fi.52desktop.cn%3a81%2fupimg%2fallimg%2f071215%2f11aD20922309234C.jpg&ehk=2gGN4eIDYxsycWM3n8ps%2fP1Spssop3%2b1MenNCFZLppE%3d&risl=&pid=ImgRaw&r=0");
+        }
+
+        #table-lis {
+            margin: 10px auto;
+            width: 1000px;
+            height: 50px;
+            background-image: url("https://img-blog.csdnimg.cn/366bc0c8076843659252dc6c949c370e.jpeg");
+        }
+
+        .box {
+            margin: auto;
+            width: 1300px;
+            height: 30px;
+            background-image: url("https://p1.ssl.qhmsg.com/t016bd8319c83f683ab.jpg");
+        }
+
+        tr th {
+            text-align: center;
+        }
+
+        tr td {
+            text-align: center;
+        }
+
+        .xiugai {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 10px;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .content {
+            background-color: #fefefe;
+            margin: 10% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 40%;
+        }
+
+        .title {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="box">
+        茶叶名称：<input type="text" id="name">
+        茶叶类型：<input type="text" id="type">
+        茶叶价格：<input type="text" id="price">
+        茶叶库存：<input type="text" id="stock">
+        茶叶描述：<input type="text" id="description">
+        <button id="addbtn">添加</button>
+        <table border="1" style=border-collapse:collapse id="table-lis">
+            <thead>
+                <tr>
+                    <th scope="col">茶叶（ID）</th>
+                    <th scope="col">茶叶名称</th>
+                    <th scope="col">茶叶类型</th>
+                    <th scope="col">茶叶价格</th>
+                    <th scope="col">茶叶库存</th>
+                    <th scope="col">茶叶描述</th>
+                    <th scope="col">创建时间</th>
+                    <th scope="col">更新时间</th>
+                    <th scope="col">操作</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+    <div class="xiugai" id="xiugai">
+        <div class="content">
+            <span class="close">关闭</span>
+            <div class="neirong">
+                茶叶名称：<input type="text" id="baocun-name">
+                茶叶类型：<input type="text" id="baocun-type">
+                茶叶价格：<input type="text" id="baocun-price">
+                茶叶库存：<input type="text" id="baocun-stock">
+                茶叶描述：<input type="text" id="baocun-description">
+                <button id="baocun">保存</button>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    let date = [{
+        "id": 1,
+        "name": "碧螺春",
+        "type": "绿茶",
+        "price": "25.00",
+        "stock": 50,
+        "description": "碧螺春，别称“春嫩茶”，是中国十大名茶之一",
+        "created_at": "2023-04-07T04:26:47.000000Z",
+        "updated_at": "2023-04-07T04:26:47.000000Z"
+    }, {
+        "id": 2,
+        "name": "普洱茶",
+        "type": "黑茶",
+        "price": "50.00",
+        "stock": 20,
+        "description": null,
+        "created_at": "2023-04-07T04:28:32.000000Z",
+        "updated_at": "2023-04-07T04:28:32.000000Z"
+    }
+    ]
+    let URL = 'https://liu.zzgoodqc.cn'
+    //表单事件
+    $(function () {
+        renderTable()
+
+    })
+    // 添加
+    $('#addbtn').click(function () {
+        let name = $('#name').val()
+        let type = $('#type').val()
+        let price = $('#price').val()
+        let stock = $('#stock').val()
+        let description = $('#description').val()
+        let data = {
+            name: name,
+            type: type,
+            price: price,
+            stock: stock,
+            description: description,
+        }
+        $.ajax({
+            url: 'https://liu.zzgoodqc.cn/teas',
+            type: 'POST',
+            data: data,
+            dataType: "JSON",
+            success: function (res) {
+                alert('添加成功');
+                renderTable()
+            }
+        })
+    })
+    // 绑定弹窗
+    $('.close').click(function () {
+        $('#xiugai').hide();
+    })
+    // 修改
+    $('tbody').on('click', '.edit', function () {
+        let id = $(this).data('id')
+        let item = date.find(item => item.id == id)
+        $('#id').val(item.id)
+        $('#name').val(item.name)
+        $('#type').val(item.type)
+        $('#price').val(item.price)
+        $('#stock').val(item.stock)
+        $('#description').val(item.description)
+        $('#xiugai').show();
+        $('#savebtn').click(function () {
+            let id = $('#id').val()
+            let name = $('#name').val()
+            let type = $('#type').val()
+            let price = $('#price').val()
+            let stock = $('#stock').val()
+            let description = $('#description').val()
+            let data = {
+                id: id,
+                name: name,
+                type: type,
+                price: price,
+                stock: stock,
+                description: description,
+            }
+            $.ajax({
+                url: `https://liu.zzgoodqc.cn/teas/${id}`,
+                type: 'PUT',
+                data: data,
+                dataType: "JSON",
+                success: function (res) {
+                    alert('修改成功');
+                    gestSongs()
+                    renderTable()
+                }
+            })
+        })
+    })
+    // 保存
+    $('#baocun').click(function () {
+        let id = $('#id').val()
+        let name = $('#name').val()
+        let type = $('#type').val()
+        let price = $('#price').val()
+        let stock = $('#stock').val()
+        let description = $('#description').val()
+        let item = date.find(item => item.name === name);
+        item.name = $('#baocun-name').val()
+        item.type = $('#baocun-type').val()
+        item.price = $('#baocun-#price').val()
+        item.stock = $('#baocun-stock').val()
+        item.description = $('#baocun-description').val()
+        renderTable();
+        $('#xiugai').hide();
+    })
+    // 渲染页面
+    function renderTable() {
+        $.ajax({
+            url: `https://liu.zzgoodqc.cn/teas`,
+            type: "GET",
+            success: function (res) {
+                let date = JSON.parse(res).data;
+                let html = '';
+                date.forEach((item, index) => {
+                    html += `<tr> 
+                    <td>${item.id}</td>
+                    <td>${item.name}</td>
+                    <td>${item.type}</td>
+                    <td>${item.price}</td>
+                    <td>${item.stock}</td>
+                    <td>${item.description}</td>
+                    <td>${item.created_at}</td>
+                    <td>${item.updated_at}</td>
+                    <td>
+                        <button data-id="${item.id}" class="edit">修改</button>
+                        <button data-id="${item.id}" class="delete">删除</button>
+                    </td>
+                    </tr>`
+                })
+                $('tbody').html(html);
+                // 绑定删除按钮事件
+                $('.delete').click(function () {
+                    let id = $(this).data('id');
+                    if (confirm(`确认删除ID为${id}的数据吗？`)) {
+                        $.ajax({
+                            url: `https://liu.zzgoodqc.cn/teas/${id}`,
+                            type: 'DELETE',
+                            success: function (res) {
+                                alert('删除成功');
+                                renderTable();
+                            }
+                        })
+                    }
+                })
+            }
+        })
+    }
+</script>
+
+</html>

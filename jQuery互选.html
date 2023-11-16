@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="./jquery-3.7.1.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        li {
+            list-style: none;
+        }
+
+        .box {
+            margin: auto;
+            width: 1000px;
+            height: 500px;
+            border: 1px solid red;
+        }
+
+        #left {
+            float: left;
+            width: 260px;
+            height: 495px;
+            border: 3px dotted black;
+        }
+
+        #right {
+            float: right;
+            width: 260px;
+            height: 495px;
+            border: 3px dotted black;
+        }
+
+        #left-btn {
+            float: left;
+            margin: 200px 60px;
+            width: 100px;
+            height: 50px;
+        }
+
+        #right-btn {
+            float: left;
+            margin: 200px 60px;
+            width: 100px;
+            height: 50px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="box">
+        <ul id="left">
+            <li><input type="text" placeholder="请输入水果" id="left-add"></li>
+            <li style="border-color: beige;">
+                <input type="checkbox" id="left-check-all">
+                <h3>水果</h3>
+            </li>
+            <ul id="left-list"></ul>
+        </ul>
+        <button id="right-btn">➡</button>
+        <button id="left-btn">⬅</button>
+        <ul id="right">
+            <li><input type="text" placeholder="请输入蔬菜" id="right-add"></li>
+            <li style="border-color: beige;">
+                <input type="checkbox" id="right-check-all">
+                <h3>蔬菜</h3>
+            </li>
+            <ul id="right-list"></ul>
+        </ul>
+    </div>
+</body>
+<script>
+    let left = [
+        {
+            id: 1,
+            name: '苹果',
+            status: true,
+        },
+    ],
+        right = [{
+            id: 2,
+            name: '茄子',
+            status: true,
+        },
+        ]
+    // 页面加载
+    $(function () {
+        renderLeft()
+        renderRight()
+        $('#left-add').on('keydown', addLeftFun)
+        $('#right-add').on('keydown', addRightFun)
+        // 左边全选
+        $('#left-check-all').change(leftCheckAllFun)
+        // 右边全选
+        $('#right-check-all').change(rightCheckAllFun)
+        // 左边复选框改变事件
+        $('left-list li').on('change', leftChangeStatus)
+        // 右边复选框改变事件
+        $('right-list li').on('change', rightChangeStatus)
+        $('#left-btn').click(rightToLeft)
+        $('#right-btn').click(leftToRight)
+    })
+
+    function leftToRight() {
+        let leftTmp = left.filter((item) => {
+            return item.status
+        })
+        right = right.concat(leftTmp)
+        left = left.filter((item) => {
+            return !item.status
+        })
+        renderLeft()
+        renderRight()
+    }
+    function rightToLeft() {
+        let rightTmp = right.filter((item) => {
+            return item.status
+        })
+        left = left.concat(rightTmp)
+        right = right.filter((item) => {
+            return !item.status
+        })
+        renderLeft()
+        renderRight()
+    }
+
+    function leftChangeStatus() {
+        let checked = $(this).find('input').prop('checked')
+        let index = $(this).data('index')
+        left[index].status = checked
+        checkLeftAllStatus()
+    }
+    function rightChangeStatus() {
+        let checked = $(this).find('input').prop('checked')
+        let index = $(this).data('index')
+        right[index].status = checked
+        checkRightAllStatus()
+    }
+
+    function checkRightAllStatus() {
+        let checked = right.every((item) => {
+            return item.status
+        })
+        $('#right-check-all').prop('checked', checked)
+    }
+    function checkLeftAllStatus() {
+        let checked = right.every((item) => {
+            return item.status
+        })
+        $('#left-check-all').prop('checked', checked)
+    }
+
+    function rightCheckAllFun() {
+        let checked = $(this).prop('checked')
+        right.forEach((currentItem) => {
+            currentItem.status = checked
+        })
+        renderRight()
+    }
+    function leftCheckAllFun() {
+        let checked = $(this).prop('checked')
+        left.forEach((currentItem) => {
+            currentItem.status = checked
+        })
+        renderLeft()
+    }
+
+    function addRightFun() {
+        if (event.key == 'Enter') {
+            let val = $(this).val()
+            let data = {
+                id: new Date().getTime(),
+                name: val,
+                status: false,
+            }
+            right.push(data)
+            $('#right li').off('change', rightChangeStatus)
+            renderRight()
+            $(this).val('')
+        }
+    }
+    function addLeftFun() {
+        if (event.key == 'Enter') {
+            let val = $(this).val()
+            let data = {
+                id: new Date().getTime(),
+                name: val,
+                status: false,
+            }
+            left.push(data)
+            $('#left-list li').off('change', leftChangeStatus)
+            renderLeft()
+            $(this).val('')
+        }
+    }
+
+    function renderLeft() {
+        let html = ``
+        left.forEach((item, index) => {
+            html += `
+            <li data-index='${index}'><input type ="checkbox" ${item.status ? 'checked' : ''}
+                id ="n${item.id}"><lable for="n${item.id}">${item.name}</lable></li>`
+        })
+        $('#left-list').html(html)
+        $('#left-list li').on('change', leftChangeStatus)
+    }
+    function renderRight() {
+        let html = ``
+        right.forEach((item, index) => {
+            html += `
+            <li data-index='${index}'><input type ="checkbox" ${item.status ? 'checked' : ''}
+                id ="n${item.id}"><lable for="n${item.id}">${item.name}</lable></li>`
+        })
+        $('#right-list').html(html)
+        $('#right-list li').on('change', rightChangeStatus)
+    }
+</script>
+
+</html>

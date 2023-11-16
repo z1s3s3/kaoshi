@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../Div 模板/bootstrap.min.css">
+    <script src="../Div 模板/jquery.slim.min.js"></script>
+    <script src="../Div 模板/bootstrap.bundle.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        .one {
+            width: 1200px;
+            margin: auto;
+            background-image: url("qq音乐图片.png");
+        }
+
+        .table-dark {
+            width: 1200px;
+            margin: auto;
+            background: rgba(100, 150, 100, 0.9);
+        }
+
+        img {
+            width: 50px;
+            height: 50px;
+        }
+
+        tr th {
+            text-align: center;
+        }
+
+        tr td {
+            text-align: center;
+        }
+
+        h2 {
+            width: 200px;
+            margin: 10px auto;
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+        <h2>歌曲列表</h2>
+    </div>
+    <div class="one">
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">添加歌曲</button>
+        <table class="table table-bordered table-dark ">
+            <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">歌曲标题</th>
+                    <th scope="col">作者</th>
+                    <th scope="col">专辑</th>
+                    <th scope="col">时间</th>
+                    <th scope="col">类型</th>
+                    <th scope="col">发行时间</th>
+                    <th scope="col">更新时间</th>
+                    <th scope="col">图片网址</th>
+                    <th scope="col">操作</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+        <nav aria-label="Page navigation example">
+            <ul class="pagination">
+            </ul>
+        </nav>
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">添加歌曲</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <div class="form-group">
+                                <label for="title">歌曲名称</label>
+                                <input type="text" class="form-control" id="title" value="晴天">
+                            </div>
+                            <div class="form-group">
+                                <label for="artist">作者</label>
+                                <input type="text" class="form-control" id="artist" value="周杰伦">
+                            </div>
+                            <div class="form-group">
+                                <label for="album">专辑</label>
+                                <input type="text" class="form-control" id="album" value="晴天">
+                            </div>
+                            <div class="form-group">
+                                <label for="year">年份</label>
+                                <input type="text" class="form-control" id="year" value="2008">
+                            </div>
+                            <div class="form-group">
+                                <label for="genre">类型</label>
+                                <input type="text" class="form-control" id="genre" value="流行">
+                            </div>
+                            <div class="form-group">
+                                <label for="image_url">图片</label>
+                                <input type="text" class="form-control" id="image_url">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+                        <button type="button" class="btn btn-primary" id="save-btn">保存歌曲</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="edit-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">修改歌曲--<b></b></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="title-edit">歌曲名称</label>
+                            <input type="text" class="form-control" id="title-edit" value="晴天">
+                        </div>
+                        <div class="form-group">
+                            <label for="artist-edit">作者</label>
+                            <input type="text" class="form-control" id="artist-edit" value="周杰伦">
+                        </div>
+                        <div class="form-group">
+                            <label for="album-edit">专辑</label>
+                            <input type="text" class="form-control" id="album-edit" value="晴天">
+                        </div>
+                        <div class="form-group">
+                            <label for="year-edit">年份</label>
+                            <input type="text" class="form-control" id="year-edit" value="2008">
+                        </div>
+                        <div class="form-group">
+                            <label for="genre-edit">类型</label>
+                            <input type="text" class="form-control" id="genre-edit" value="流行">
+                        </div>
+                        <div class="form-group">
+                            <label for="image_url-edit">图片</label>
+                            <input type="text" class="form-control" id="image_url-edit">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+                    <button type="button" id="save-btn-edit" class="btn btn-primary">保存歌曲</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+
+        let URL = 'http://mp3.zzgoodqc.cn/api'
+        let saveBtnEle = document.querySelector('#save-btn')
+        let saveEditBtn = document.querySelector('#save-btn-edit')
+        let navEle = document.querySelector('.pagination')
+        let tbodyEle = document.querySelector('tbody')
+        let page = 1,
+            pageSize = 5,
+            pageNum = 0;
+        // 获取歌曲列表
+        window.addEventListener('load', init)
+        function init() {
+            // 获取歌曲列表
+            gestSongs()
+            // 添加歌曲按钮绑定事件
+            saveBtnEle.addEventListener('click', addSong)
+            //给分页附上事件
+            navEle.addEventListener('click', navClickFun)
+            // 表身体事件
+            tbodyEle.addEventListener('click', tbodyClickFun)
+            saveEditBtn.addEventListener('click', saveEditFun)
+        }
+        // 本地存储
+        function getLocalData() {
+            let localsongs = localStorage.getItem('songs')
+            if (localsongs) {
+                let songs = JSON.parse(localsongs)
+                render(songs.data)
+                renderPage(songs.count)
+            }
+        }
+        // 修改歌曲
+        // function saveEditFun() {
+        //     let titles = document.querySelector('#title-edit').value
+        //     let artists = document.querySelector('#artist-edit').value
+        //     let albums = document.querySelector('#album-edit').value
+        //     let years = document.querySelector('#year-edit').value
+        //     let genres = document.querySelector('#genre-edit').value
+        //     let image_url = document.querySelector('#image_url-edit').value
+        //     let id = document.querySelector('b').innerHTML
+        //     let data = {
+        //         title: titles,
+        //         artist: artists,
+        //         album: albums,
+        //         year: years,
+        //         genre: genres,
+        //         image_url: image_url,
+        //     }
+        //     ajax({
+        //         url: '/songs/' + id,
+        //         method: 'PUT',
+        //         data: data,
+        //         success: function (res) {
+        //             console.log(res);
+        //             if (res.code == 200) {
+        //                 alert('修改成功')
+        //                 gestSongs()
+        //                 $('#edit-modal').modal('hide')
+        //             }
+        //         }
+        //     })
+        // }
+        // 表身体事件
+        function tbodyClickFun() {
+            // 判断点击的目标的标签是否是按钮
+            if (event.target.tagName == 'BUTTON') {
+                // 如果是按钮 内容是否是删除
+                if (event.target.innerHTML == '删除') {
+                    // 获取自定义属性id
+                    let id = event.target.dataset.id
+                    if (confirm('确定删除？')) {
+                        // 调用删除函数
+                        deleteSong(id)
+                    }
+                }
+                if (event.target.innerHTML == '编辑') {
+                    let id = event.target.dataset.id
+                    document.querySelector('b').innerHTML = id;
+                    // 回显数据
+                    ajax({
+                        url: '/songs/' + id,
+                        success: function (res) {
+                            if (res.code = 200) {
+                                document.querySelector('#title-edit').value = res.data[0].title
+                                document.querySelector('#artist-edit').value = res.data[0].artist
+                                document.querySelector('#album-edit').value = res.data[0].album
+                                document.querySelector('#year-edit').value = res.data[0].year
+                                document.querySelector('#genre-edit').value = res.data[0].genre
+                                document.querySelector('#image_url-edit').value = res.data[0].image_url
+                            }
+                        }
+                    })
+                }
+            }
+        }
+        // 通过id删除歌曲
+        function deleteSong(id) {
+            ajax({
+                url: '/songs?id=' + id,
+                method: 'DELETE',
+                success: function (res) {
+                    if (res.code == 200) {
+                        gestSongs()
+                        alert('删除成功')
+                    }
+                }
+            })
+        }
+        // 分页事件
+        function navClickFun() {
+            if (event.target.tagName == 'A') {
+                // console.log(event.target.innerHTML);
+                switch (event.target.innerHTML) {
+                    case '上一页':
+                        page--
+                        page = page == 0 ? 1 : page
+                        break;
+                    case '下一页':
+                        page++
+                        page = page > pageNum ? pageNum : page
+                        break;
+                    default:
+                        page = event.target.innerHTML
+                }
+                gestSongs();
+            }
+        }
+        // 添加歌曲
+        function addSong() {
+            let titles = document.querySelector('#title').value
+            let artists = document.querySelector('#artist').value
+            let albums = document.querySelector('#album').value
+            let years = document.querySelector('#year').value
+            let genres = document.querySelector('#genre').value
+            let image_url = document.querySelector('#image_url').value
+            let data = {
+                title: titles,
+                artist: artists,
+                album: albums,
+                year: years,
+                genre: genres,
+                image_url: image_url,
+            }
+            ajax({
+                url: '/songs',
+                method: 'POST',
+                data: data,
+                success: function (res) {
+                    alert('添加成功');
+                    gestSongs();
+                    $('#exampleModal').modal('hide')
+                }
+            })
+        }
+        //获取歌曲
+        function gestSongs() {
+            ajax({
+                url: `/songs?page=${page}&pageSize=${pageSize}`,
+                success: function (res) {
+                    if (res.code == 200) {
+                        render(res.data)
+                        renderPage(res.count)
+                        localStorage.setItem('songs', JSON.stringify(res))
+                    }
+                }
+            })
+        }
+        // 渲染分页
+        function renderPage(count) {
+            html = `<li class="page-item ${page == 1 ? 'disabled' : ''}">
+                    <a class="page-link" href="javescript:void(0)">上一页</a>
+                    </li>`;
+            pageNum = Math.ceil(count / pageSize)
+            for (let i = 1; i <= pageNum; i++) {
+                html += `<li class="page-item ${page == i ? 'disabled' : ''}">
+                    <a class="page-link" href="javescript:void(0)">${i}</a>
+                    </li>`
+            }
+            html += `<li class="page-item ${page == pageNum ? 'disabled' : ''}">
+                    <a class="page-link" href="javescript:void(0)">下一页</a>
+                </li>`
+            navEle.innerHTML = html
+        }
+        // 渲染表格
+        function render(data) {
+            let html = ''
+            data.forEach((item, index) => {
+                html += `<tr> 
+                      <th scope='row'>${item.id}</th>
+                      <td>${item.title}</td>
+                      <td>${item.artist}</td>
+                      <td>${item.album}</td>
+                      <td>${item.year}</td>
+                      <td>${item.genre}</td>
+                      <td>${prettierData(item.created_at)}</td>
+                      <td>${prettierData(item.updated_at)}</td>
+                      <td><img src="qq音乐图片.png"></td>
+                      <td>
+                        <button type="button" class="btn btn-outline-primary"
+                        data-toggle="modal" data-target="#edit-modal" data-id="${item.id}">编辑</button>
+                        <button type="button" data-id="${item.id}" class="btn btn-outline-danger">删除</button>
+                    </tr>`
+            });
+            document.querySelector('tbody').innerHTML = html;
+        }
+        // 发送请求
+        function ajax({ url, method = "GET", data = null, success }) {
+            let xhr = new XMLHttpRequest()
+            xhr.open(method, URL + url, true)
+            xhr.setRequestHeader('Content-Type', 'application/json')
+            xhr.responseType = 'json'
+            if (method == 'POST' || method == 'PUT') {
+                xhr.send(JSON.stringify(data))
+            } else {
+                xhr.send()
+            }
+            xhr.onload = function () {
+                if (xhr.status == 200) {
+                    success(xhr.response)
+                } else {
+                    console.log('请求失败');
+                }
+            }
+        }
+        function prettierData(item) {
+            let date = new Date(item)
+            let year = date.getFullYear()
+            let month = date.getMonth() + 1
+            let day = date.getDate()
+            let hour = date.getHours()
+            let minute = date.getMinutes()
+            let second = date.getSeconds()
+            return `${year} ${month} ${day} ${hour}:${minute}:${second}`
+        }
+    </script>
+</body>
+
+</html>

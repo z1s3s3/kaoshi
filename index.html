@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>作业目录</title>
+    <script src="./jquery-3.7.1.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        #table-lis {
+            margin: auto;
+            width: 700px;
+            height: 50px;
+            background-color: slategrey;
+            border-color: aqua;
+        }
+
+        tr {
+            width: 700px;
+            height: 50px;
+        }
+
+        tr th {
+            text-align: center;
+            height: 50px;
+        }
+
+        tr td {
+            text-align: center;
+            height: 50px;
+        }
+    </style>
+</head>
+
+<body>
+    <table border="1" style=border-collapse:collapse id="table-lis">
+        <thead>
+            <tr>
+                <th scope="col">标题</th>
+                <th scope="col">地址</th>
+                <th scope="col">时间</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+</body>
+<script>
+    let date = [
+        {
+            name: 'tab标签页',
+            url: './tab标签页.html',
+        }, {
+            name: 'jQuery增删改查',
+            url: './jQuery增删改查.html',
+        }, {
+            name: '购物单',
+            url: './购物单.html',
+        }, {
+            name: '歌曲事件',
+            url: './歌曲事件.html',
+        }, {
+            name: 'jQuery互选',
+            url: './jQuery互选.html',
+        }, {
+
+
+        }
+    ]
+    $(function () {
+        renderTable()
+    })
+    function renderTable() {
+        let html = ``
+        date.forEach((item, index) => {
+            html += `
+            <tr>
+                <td>${item.name}</td>
+                <td><a href="${item.url}">${item.url}</a></td>
+                <td>${getDate()}</td>
+            </tr>`
+        })
+        $('tbody').html(html);
+    }
+    function getDate() {
+        let date = new Date();
+        let month = date.getMonth() + 1;
+        let day = date.getDate();
+        return `${month}——${day}`
+    }
+</script>
+
+</html>

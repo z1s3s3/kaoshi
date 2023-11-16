@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="./jquery-3.7.1.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        #table-lis {
+            margin: auto;
+            width: 700px;
+            height: 400px;
+        }
+
+        tr {
+            width: 700px;
+            height: 50px;
+        }
+
+        tr th {
+            text-align: center;
+        }
+
+        tr td {
+            text-align: center;
+        }
+
+        .box {
+            margin: auto;
+            width: 770px;
+            height: 50px;
+        }
+
+        .xiugai {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 10px;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .content {
+            background-color: #fefefe;
+            margin: 10% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 40%;
+        }
+
+        .title {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        input {
+            width: 170px;
+        }
+
+        #addbtn {
+            width: 80px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="box">
+        姓名：<input type="text" id="name">
+        年龄：<input type="text" id="age">
+        身高：<input type="text" id="height">
+        <button id="addbtn">添加</button>
+    </div>
+    <table border="1" style=border-collapse:collapse id="table-lis">
+        <thead>
+            <tr>
+                <th scope="col">姓名</th>
+                <th scope="col">年龄</th>
+                <th scope="col">身高</th>
+                <th scope="col">操作</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+    <div class="xiugai" id="xiugai">
+        <div class="content">
+            <span class="close">关闭</span>
+            <div class="neirong">
+                姓名：<input type="text" id="baocun-name">
+                年龄：<input type="text" id="baocun-age">
+                身高：<input type="text" id="baocun-height">
+                <button id="baocun">保存</button>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    let date = [
+        {
+            name: '张三',
+            age: '30',
+            height: '170',
+        }, {
+            name: '李四',
+            age: '30',
+            height: '170',
+        }, {
+            name: '王五',
+            age: '30',
+            height: '170',
+        }
+    ]
+    // 页面加载
+    $(function () {
+        renderTable()
+    })
+    // 绑定弹窗关闭按钮
+    $('.close').click(function () {
+        $('#xiugai').hide();
+    })
+    // 添加
+    $('#addbtn').click(function () {
+        let name = $('#name').val();
+        let age = $('#age').val();
+        let height = $('#height').val();
+        date.push({ name, age, height });
+        renderTable()
+    })
+    // 绑定模态框保存按钮事件
+    $('#baocun').click(function () {
+        let name = $('#baocun-name').val();
+        let age = $('#baocun-age').val();
+        let height = $('#baocun-height').val();
+        let item = date.find(item => item.name === name);
+        item.age = age;
+        item.height = height;
+        renderTable();
+        $('#xiugai').hide();
+    })
+    // 渲染页面
+    function renderTable() {
+        let html = ``
+        date.forEach((item, index) => {
+            html += `
+            <tr>
+                <td>${item.name}</td>
+                <td>${item.age}</td>
+                <td>${item.height}</td>
+                <td>
+                    <button data-name="${item.name}" class="edit">修改</button>
+                    <button data-name="${item.name}" class="delete">删除</button>
+                </td>
+            </tr>`
+        })
+        $('tbody').html(html);
+        // 修改
+        $('.edit').click(function () {
+            let name = $(this).data('name');
+            let item = date.find(item => item.name === name);
+            $('#baocun-name').val(item.name);
+            $('#baocun-age').val(item.age);
+            $('#baocun-height').val(item.height);
+            $('#xiugai').show();
+        })
+        // 绑定删除按钮事件
+        $('.delete').click(function () {
+            let name = $(this).data('name');
+            if (confirm(`确认删除${name}的信息吗？`)) {
+                date = date.filter(item => item.name !== name);
+                renderTable();
+            }
+        })
+    }
+</script>
+
+</html>

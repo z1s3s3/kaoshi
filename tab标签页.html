@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="./jquery-3.7.1.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        li {
+            list-style: none;
+            text-align: center;
+            width: 100%;
+            height: 30px;
+            line-height: 30px;
+            border-bottom: 1px solid black;
+            color: black;
+
+        }
+
+        .noes {
+            text-align: center;
+            width: 100%;
+            height: 60px;
+            line-height: 30px;
+            background-color: rgb(4, 129, 208);
+            color: white;
+        }
+
+        ul {
+            width: 200px;
+            height: 300px;
+            border-radius: 2%;
+            background-color: aliceblue;
+        }
+
+        #box {
+            width: 700px;
+            height: 300px;
+            margin: 0 auto;
+            margin-top: 100px;
+            border-bottom: 1px solid black;
+            background-image: url('../三段/考试题/qq音乐图片.png');
+        }
+
+        #con {
+            width: 500px;
+            height: 300px;
+            margin-left: 211px;
+            background-color: black;
+            margin-top: -300px;
+            overflow-x: hidden;
+        }
+
+        .box {
+            background-color: red;
+            color: white;
+        }
+
+        img {
+            margin-top: 10%;
+            width: 100%;
+            height: 75%;
+        }
+
+        .item {
+            width: 500px;
+            height: 300px;
+        }
+
+        .hide {
+            display: none;
+        }
+
+        .active {
+            text-align: center;
+            width: 100%;
+            height: 60px;
+            line-height: 30px;
+            background-color: white;
+            color: rgb(4, 129, 208);
+        }
+    </style>
+</head>
+
+<body>
+    <div id="box">
+        <ul class="parent"></ul>
+        <div id="con">
+        </div>
+    </div>
+</body>
+<script>
+    let parent = [{
+        title: '列表1',
+        checked: true,
+        children: [
+            {
+                img: 'https://ts1.cn.mm.bing.net/th/id/R-C.13a9b8b347651d085c7bf90fbace5624?rik=q6t2JgkiiYcgzg&riu=http%3a%2f%2fp2.qhimgs4.com%2ft01fd61ef8c5088feff.jpg&ehk=jhcduyGu1W8AU4aQQPNj6%2feRs3UuA1fOsBzhWM5qVa0%3d&risl=&pid=ImgRaw&r=0',
+            },
+        ]
+    }, {
+        title: '列表2',
+        checked: false,
+        children: [
+            {
+                img: 'https://ts1.cn.mm.bing.net/th/id/R-C.3d8f5e368d36938bfa9dde4ef05b4cfb?rik=G86r0JtSnP1F4g&riu=http%3a%2f%2fi1.img.969g.com%2fdown%2fimgx2014%2f11%2f11%2f289_092342_bc6c0.jpg&ehk=18it0bOjUTGVvXMYlVcdYftlHtm2ZbawxKpEKcuOH%2fY%3d&risl=&pid=ImgRaw&r=0',
+            }
+        ]
+    }, {
+        title: '列表3',
+        checked: false,
+        children: [
+            {
+                img: 'https://ts1.cn.mm.bing.net/th/id/R-C.8e1496697098db6220b5e6a8e98973a7?rik=pihFBKRVLDPn0g&riu=http%3a%2f%2fimg.fotomen.cn%2f2012%2f07%2fbz01.jpg&ehk=yTgzZtrzmPgdLE3gxf3w01LuNUcnvMEorGpcZe%2fZi5U%3d&risl=&pid=ImgRaw&r=0',
+            },
+        ]
+    }
+    ]
+    // 渲染页面
+    $(function () {
+        render()
+        renderList(0)
+        $('ul li').on('mouseenter', function () {
+            if ($(this).hasClass('noes')) return
+            let index = $(this).index()
+            $('li').removeClass('active')
+            $('li').eq(index).addClass('active')
+            renderList(index)
+        })
+    })
+    function renderList(index) {
+        let data = parent[index].children
+        let html = ``
+        data.forEach((item, index) => {
+            html += `
+            <div class="item">
+                <img src="${item.img}"
+                    alt="">
+            </div>
+             `
+        })
+        $('#con').html(html)
+    }
+    // 拼接内容
+    function render() {
+        html = ``
+        parent.forEach((item, index) => {
+            html += `<li>${item.title}</li>`
+        })
+        html += `
+        <li class="noes">
+          <p>全国服务咨询热线</p> 
+          <p>800-8686868</p>
+            </li>
+        `
+        $('ul').html(html)
+    } 
+</script>
+
+</html>
